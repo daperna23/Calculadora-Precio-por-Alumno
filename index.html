@@ -46,6 +46,10 @@
                     <input type="number" id="hours" class="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded" min="1" max="24">
                 </div>
                 <div class="mb-4">
+                    <label for="weeks" class="block text-sm font-medium">Cantidad de semanas:</label>
+                    <input type="number" id="weeks" class="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded" min="1">
+                </div>
+                <div class="mb-4">
                     <label for="teacherCost" class="block text-sm font-medium">Costo por hora del profesor:</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3">$</span>
@@ -66,22 +70,27 @@
     </div>
     <script>
         function calculateCost() {
-            const days = Array.from(document.querySelectorAll('input[name="days"]:checked')).map(checkbox => checkbox.value);
-            const hours = document.getElementById('hours').value;
-            const teacherCostPerHour = document.getElementById('teacherCost').value;
-            const students = document.getElementById('students').value;
+            const days = Array.from(document.querySelectorAll('input[name="days"]:checked')).length;
+            const hours = parseFloat(document.getElementById('hours').value);
+            const weeks = parseInt(document.getElementById('weeks').value, 10);
+            const teacherCostPerHour = parseFloat(document.getElementById('teacherCost').value);
+            const students = parseInt(document.getElementById('students').value, 10);
 
-            const hostingCostPerMonth = 20;
-            const totalHours = days.length * hours;
-            const totalTeacherCost = totalHours * teacherCostPerHour;
-            const totalCost = totalTeacherCost + hostingCostPerMonth;
-            const costPerStudent = totalCost / students;
+            if (days > 0 && hours > 0 && weeks > 0 && teacherCostPerHour > 0 && students > 0) {
+                const totalHours = days * hours * weeks;
+                const totalTeacherCost = totalHours * teacherCostPerHour;
+                const hostingCostPerMonth = 20;
+                const totalCost = totalTeacherCost + hostingCostPerMonth;
+                const costPerStudent = totalCost / students;
 
-            document.getElementById('costDetail').innerText = `El costo total del curso es $${totalCost.toFixed(2)}. 
-            Con ${students} alumnos, el costo por alumno es $${costPerStudent.toFixed(2)}. 
-            Este costo incluye $${totalTeacherCost.toFixed(2)} por ${totalHours} horas de enseñanza y $${hostingCostPerMonth} de gastos de hosting.`;
+                document.getElementById('costDetail').innerText = `El costo total del curso es $${totalCost.toFixed(2)}. 
+                Con ${students} alumnos, el costo por alumno es $${costPerStudent.toFixed(2)}. 
+                Este costo incluye $${totalTeacherCost.toFixed(2)} por ${totalHours} horas de enseñanza y $${hostingCostPerMonth} de gastos de hosting.`;
 
-            document.getElementById('result').classList.remove('hidden');
+                document.getElementById('result').classList.remove('hidden');
+            } else {
+                alert("Por favor, complete todos los campos correctamente.");
+            }
         }
     </script>
 </body>
