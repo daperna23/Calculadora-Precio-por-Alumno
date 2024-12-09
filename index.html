@@ -1,0 +1,88 @@
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Costo de Cursos SABER</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-white font-roboto">
+    <div class="container mx-auto p-4">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold">Análisis de Costo de Cursos SABER</h1>
+            <p class="text-lg mt-2">Cálculo de precio por alumno</p>
+        </header>
+        <main class="max-w-lg mx-auto bg-gray-800 p-6 rounded-lg shadow-lg">
+            <form id="costForm">
+                <div class="mb-4">
+                    <label for="days" class="block text-sm font-medium">Días de la semana del curso:</label>
+                    <div class="flex flex-wrap">
+                        <label class="mr-4 mb-2">
+                            <input type="checkbox" name="days" value="1" class="mr-1"> Lunes
+                        </label>
+                        <label class="mr-4 mb-2">
+                            <input type="checkbox" name="days" value="2" class="mr-1"> Martes
+                        </label>
+                        <label class="mr-4 mb-2">
+                            <input type="checkbox" name="days" value="3" class="mr-1"> Miércoles
+                        </label>
+                        <label class="mr-4 mb-2">
+                            <input type="checkbox" name="days" value="4" class="mr-1"> Jueves
+                        </label>
+                        <label class="mr-4 mb-2">
+                            <input type="checkbox" name="days" value="5" class="mr-1"> Viernes
+                        </label>
+                        <label class="mr-4 mb-2">
+                            <input type="checkbox" name="days" value="6" class="mr-1"> Sábado
+                        </label>
+                        <label class="mr-4 mb-2">
+                            <input type="checkbox" name="days" value="7" class="mr-1"> Domingo
+                        </label>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label for="hours" class="block text-sm font-medium">Cantidad de horas por curso:</label>
+                    <input type="number" id="hours" class="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded" min="1" max="24">
+                </div>
+                <div class="mb-4">
+                    <label for="teacherCost" class="block text-sm font-medium">Costo por hora del profesor:</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">$</span>
+                        <input type="number" id="teacherCost" class="w-full pl-8 mt-1 p-2 bg-gray-700 border border-gray-600 rounded" min="1">
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label for="students" class="block text-sm font-medium">Cantidad de alumnos:</label>
+                    <input type="number" id="students" class="w-full mt-1 p-2 bg-gray-700 border border-gray-600 rounded" min="1">
+                </div>
+                <button type="button" onclick="calculateCost()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Calcular Costo</button>
+            </form>
+            <div id="result" class="mt-6 p-4 bg-gray-700 rounded hidden">
+                <h2 class="text-xl font-bold">Costo Final del Curso</h2>
+                <p id="costDetail" class="mt-2"></p>
+            </div>
+        </main>
+    </div>
+    <script>
+        function calculateCost() {
+            const days = Array.from(document.querySelectorAll('input[name="days"]:checked')).map(checkbox => checkbox.value);
+            const hours = document.getElementById('hours').value;
+            const teacherCostPerHour = document.getElementById('teacherCost').value;
+            const students = document.getElementById('students').value;
+
+            const hostingCostPerMonth = 20;
+            const totalHours = days.length * hours;
+            const totalTeacherCost = totalHours * teacherCostPerHour;
+            const totalCost = totalTeacherCost + hostingCostPerMonth;
+            const costPerStudent = totalCost / students;
+
+            document.getElementById('costDetail').innerText = `El costo total del curso es $${totalCost.toFixed(2)}. 
+            Con ${students} alumnos, el costo por alumno es $${costPerStudent.toFixed(2)}. 
+            Este costo incluye $${totalTeacherCost.toFixed(2)} por ${totalHours} horas de enseñanza y $${hostingCostPerMonth} de gastos de hosting.`;
+
+            document.getElementById('result').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
